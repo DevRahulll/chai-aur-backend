@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from "cloudinary"
-import { response } from "express";
 import fs from "fs"
 
 
@@ -10,25 +9,28 @@ cloudinary.config({
 });
 
 
-const uploadOnCloudinary=async(localFilePath)=>{
+const uploadOnCloudinary = async (localFilePath) => {
+    // console.log("Here ",localFilePath);
     try {
-        if(!localFilePath) return null
+        if (!localFilePath) return null
         // upload the file on cloudinary
-        const response= await cloudinary.uploader.upload(localFilePath,{
-             resource_type:"auto"
+
+        const response = await cloudinary.uploader.upload(localFilePath, {
+            resource_type: "auto"
         })
+
         //file has been successfully uploaded
         // console.log("file has been successfully uploaded",response.url);
+
         fs.unlinkSync(localFilePath);
+
         return response;
+
     } catch (error) {
         fs.unlinkSync(localFilePath) //remove the locally file saved temporoary file as the upload operation got failed
         return null;
     }
 }
 
-export {uploadOnCloudinary}
+export { uploadOnCloudinary }
 
-cloudinary.uploader.upload("https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-    { public_id: "olympic_flag" },
-    function (error, result) { console.log(result); });
